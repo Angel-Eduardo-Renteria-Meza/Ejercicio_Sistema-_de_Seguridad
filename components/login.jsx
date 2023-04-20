@@ -2,14 +2,17 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
 import { Formik, useField } from 'formik';
 import { loginValidationSchena } from '../Validaciones/loginValidation';
+import axios from 'axios';
+import CountDown from './countDown';
 import StyleInput from '../Styles/StylesInput';
 
 const Login = ({ navigation }) => {
+    //Inicializando variables
     const initialValues = {
         email: '',
         password: ''
      }
-
+     
      const FormikInputValue = ({ name, ...props}) => {
         const [field, meta, helpers] = useField(name)
 
@@ -27,12 +30,37 @@ const Login = ({ navigation }) => {
             </>
         )
      }
-
-    
-
+     setTimeout(() => {
+        navigation.navigate('Home')
+      }, 180000);//180000
     return(
-        <Formik validationSchema={loginValidationSchena}  initialValues={initialValues} onSubmit={values => {
-            console.log(values)
+        <Formik validationSchema={loginValidationSchena}  initialValues={initialValues} onSubmit={async (values) => {
+             const email = values.email
+             const password = values.password
+                
+                axios.post('http://localhost:5000/api/users/log', { email, password })
+            .then( data => {    
+                
+                const token = data.data.token ;
+
+                    // Define la configuración de la cookie
+                    const cookieConfig = {
+                    path: '/',
+                    secure: true,
+                    sameSite: 'strict',
+                    expires: new Date(Date.now() + 0 * 60 * 60 * 1000), // expira en 24 horas
+                    httpOnly: true
+                    // secure: true solo enviar por HTTPS
+                    };
+
+                    // Crea la cookie con el nombre "miCookie" y el valor del token
+                    document.cookie = `miCookie=${token}; ${cookieConfig.path}; expires=${cookieConfig.expires.toUTCString()}; sameSite=${cookieConfig.sameSite}; secure=${cookieConfig.secure}; httpOnly=${cookieConfig.httpOnly}`;
+
+                    navigation.navigate("Datos")
+            })
+            .catch(err => {console.log(err)})
+           
+            
         }
            
             // values => {
@@ -48,10 +76,7 @@ const Login = ({ navigation }) => {
 
                 return(
                     <View style={styles.container}>
-                                {/* <Image
-                                source={require("../../img/cultivecare.png")}
-                                style={styles.img}
-                                /> */}
+                                <CountDown/>
                                 <Text style={styles.h1}>Iniciar Sesión</Text>
                                 
                                 {/* <Text style={styles.h2}>Por favor, ingrese sus datos para acceder</Text> */}
@@ -101,6 +126,15 @@ const Login = ({ navigation }) => {
                                             Registrarse
                                         </Text>
                                     </TouchableOpacity>
+                                    {/* <TouchableOpacity
+                                        onPress={() => {
+                                            navigation.navigate('Home')
+                                        }}
+                                    >
+                                        <Text>
+                                            home
+                                        </Text>
+                                    </TouchableOpacity> */}
                                 </View>
                             </View>
                 );

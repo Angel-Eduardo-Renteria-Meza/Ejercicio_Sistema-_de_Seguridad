@@ -4,9 +4,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 //Modulos
-import home from '../components/home';
+import Home from '../components/home';
 import Login from '../components/login';
 import Registro from '../components/registro';
+import CountDown from '../components/countDown';
+import Datos from '../components/Datos';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,12 +18,14 @@ function Navigate() {
       <Stack.Navigator 
         initialRouteName='Home'
         screenOptions={{
-            headerTitleAlign: "center"
+            headerShown: false
         }}
       >
-        <Stack.Screen name="Home" component={home} />
+        <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Registro" component={Registro}/>
+        <Stack.Screen name="Count" component={CountDown}/>
+        <Stack.Screen name="Datos" component={Datos}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

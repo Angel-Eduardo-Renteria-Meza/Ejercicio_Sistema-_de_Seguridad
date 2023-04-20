@@ -1,17 +1,16 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import Checkbox from "expo-checkbox";
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Formik, useField } from "formik";
 import { registroValidationSchena } from "../Validaciones/RegistroValidation";
 import StyleInput from "../Styles/StylesInput";
+import axios from "axios";
 
 
 
 
 
 const Registro = ({ navigation }) => {
-    //funcionamiento checkbox
-    const [isChecked, setChecked] = useState(false);
+    
 
     const initialValues = {
         email: '',
@@ -41,20 +40,41 @@ const Registro = ({ navigation }) => {
      }
 
     return(
-        <Formik validationSchema={registroValidationSchena}  initialValues={initialValues} onSubmit={values => console.log(values)}>
+        <Formik validationSchema={registroValidationSchena}  initialValues={initialValues} onSubmit={values => {
+            axios.post('http://localhost:5000/api/users',{
+                nombres: values.nombres,
+                apellido: values.apellidos,
+                email: values.email,
+                password: values.password
+            }).then(data => console.log(data))
+            .catch(err => console.log(err))
+        }}>
             {({ handleSubmit }) => {
                 return(
         <View style={styles.Container}>
             <Text style={styles.h1}>Registro</Text>
              <View style={styles.containerIn}>
-                <Text
+             <Text
                  style={styles.p}
              >
-                 Refid
+                 Nombres
              </Text>
              <FormikInputValue
-                 name = 'refid'
-                 placeholder='Ingresa tu refid'
+                 name = 'nombres'
+                 
+                 placeholder='Ingresa tu nombre'
+                 placeholderTextColor="grey" 
+             />
+              <Text
+                 style={styles.p}
+                
+             >
+                 Apellidos
+             </Text>
+             <FormikInputValue
+                 name = 'apellidos'
+                 
+                 placeholder='Ingresa tus apellidos'
                  placeholderTextColor="grey" 
              />
              <Text
@@ -83,12 +103,7 @@ const Registro = ({ navigation }) => {
              />
               
              </View>
-             <View style={styles.checkboxContainer}>
-                <Checkbox style={styles.checkbox} value={isChecked} color="green" onValueChange={setChecked} />
-                <Text style = {styles.p2}>Estoy de acuerdo con los </Text>
-                <TouchableOpacity style={styles.terbtn}>
-                 <Text style={styles.ter}>Términos de servicio.</Text>
-                </TouchableOpacity></View>
+             
             
                 <TouchableOpacity
                  style={styles.Btn}
@@ -101,7 +116,7 @@ const Registro = ({ navigation }) => {
                  <Text>Ya tienes una cuenta? </Text>
                  <TouchableOpacity
                     onPress={ () => {
-                        navigation.navigate('Home')
+                        navigation.navigate('Login')
                     } }
                  >
                      <Text style={styles.ini}>Iniciar sesión</Text>
