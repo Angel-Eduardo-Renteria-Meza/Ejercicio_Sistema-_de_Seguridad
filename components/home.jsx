@@ -53,7 +53,8 @@ axios.post('http://localhost:5000/api/users/token',{token})
       });
  
       socket.on('update', (data) => {
-        if(data.data[0].RFID === 'D08E323B'){
+        console.log(data);
+        if(data.RFID === 'D08E323B'){
             navigation.navigate('Login')
         }
       });
@@ -115,13 +116,13 @@ axios.post('http://localhost:5000/api/users/token',{token})
             <Text style={styles.Text}>
                 Porfavor utiliza tu tarjeta o llavero para Validarte.
             </Text>
-             <TouchableOpacity
+             {/* <TouchableOpacity
                 onPress={handleSubmit}
                 style={styles.TouchableOpacity}
             >
             <Text style={styles.Text2}>ir a login</Text>
                
-            </TouchableOpacity>  
+            </TouchableOpacity>   */}
             {/* <TouchableOpacity
                 onPress={res}
                 style={styles.TouchableOpacity}
