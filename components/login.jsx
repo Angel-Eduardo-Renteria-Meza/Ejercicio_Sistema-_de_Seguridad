@@ -7,6 +7,21 @@ import CountDown from './countDown';
 import StyleInput from '../Styles/StylesInput';
 
 const Login = ({ navigation }) => {
+    //Revisa la token
+    const Token = localStorage.getItem("token")
+        
+axios.post('http://localhost:5000/api/users/token',{Token})
+    .then(data => {
+        const place = data.data.place
+        if(place  === 'undefined' || ''){
+            console.log('Inicia Sesion');
+        } else{
+            navigation.navigate('Datos')
+        }  
+    }
+      
+    )
+    .catch(err => console.log(err))
     //Inicializando variables
     const initialValues = {
         email: '',
@@ -40,21 +55,12 @@ const Login = ({ navigation }) => {
                 
                 axios.post('http://localhost:5000/api/users/log', { email, password })
             .then( data => {    
-                
-                const token = data.data.token ;
+                console.log(data);
+                const token = data.data.accessToken ;
+                console.log(token);
+                localStorage.setItem("token",token)
 
-                    // Define la configuración de la cookie
-                    const cookieConfig = {
-                    path: '/',
-                    secure: true,
-                    sameSite: 'strict',
-                    expires: new Date(Date.now() + 0 * 60 * 60 * 1000), // expira en 24 horas
-                    httpOnly: true
-                    // secure: true solo enviar por HTTPS
-                    };
-
-                    // Crea la cookie con el nombre "miCookie" y el valor del token
-                    document.cookie = `miCookie=${token}; ${cookieConfig.path}; expires=${cookieConfig.expires.toUTCString()}; sameSite=${cookieConfig.sameSite}; secure=${cookieConfig.secure}; httpOnly=${cookieConfig.httpOnly}`;
+                    
 
                     navigation.navigate("Datos")
             })

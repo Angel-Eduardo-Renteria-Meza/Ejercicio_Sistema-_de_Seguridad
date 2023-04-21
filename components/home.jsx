@@ -7,37 +7,17 @@ import io from 'socket.io-client';
 
 export default function Home({ navigation }){
 
-    function getCookieObject() {
-        const cookieString = document.cookie;
-        const cookieArray = cookieString.split("; ");
-        const cookieObject = {};
-        for (let i = 0; i < cookieArray.length; i++) {
-          const cookie = cookieArray[i].split("=");
-          const cookieName = cookie[0];
-          const cookieValue = cookie[1];
-          cookieObject[cookieName] = cookieValue;
-        }
-        return cookieObject;
-      }
-      
-      const tokenObject = getCookieObject();
-      const token = tokenObject.miCookie;
-      
-axios.post('http://localhost:5000/api/users/token',{token})
+        const Token = localStorage.getItem("token")
+        
+axios.post('http://localhost:5000/api/users/token',{Token})
     .then(data => {
         const place = data.data.place
-        
-        switch (true) {
-        case place === 'app':
+        if(place  === 'undefined' || ''){
+            console.log('Inicia Sesion');
+        } else{
             navigation.navigate('Datos')
-            console.log("es una app");
-            break;
-        case place === 'login':
-            
-            break;
-        default:
-            break;
-      }}
+        }  
+    }
       
     )
     .catch(err => console.log(err))
@@ -116,13 +96,13 @@ axios.post('http://localhost:5000/api/users/token',{token})
             <Text style={styles.Text}>
                 Porfavor utiliza tu tarjeta o llavero para Validarte.
             </Text>
-             {/* <TouchableOpacity
+              <TouchableOpacity
                 onPress={handleSubmit}
                 style={styles.TouchableOpacity}
             >
             <Text style={styles.Text2}>ir a login</Text>
                
-            </TouchableOpacity>   */}
+            </TouchableOpacity>   
             {/* <TouchableOpacity
                 onPress={res}
                 style={styles.TouchableOpacity}
